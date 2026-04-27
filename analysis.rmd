@@ -1,0 +1,116 @@
+---
+title: "Analysis of Top 5 Philippine Volcanic Eruptions"
+subtitle: "Portfolio 4"
+author: "RenzWoo"
+date: "2025-04-29"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+# Libraries
+```{r}
+library(tidyverse)
+library(readr)
+library(dplyr)
+```
+
+# Load Data
+```{r}
+data <- read_csv("Volcano-Philippines.csv")
+data <- data %>% 
+  rename(Volcano = Name)
+
+print(head(data))
+```
+# Clean data
+```{r, results='hide'}
+data_clean <- data %>% drop_na(Deaths, VEI)
+
+# Sort by VEI and Deaths field
+data_sorted <- data_clean %>% arrange(desc(VEI), desc(Deaths))
+data_sorted
+```
+
+# Analysis
+We chose the Volcanic Explosivity Index (VEI) because it measures the intensity of eruptions and visually communicates the scale of which an eruption happened. We also chose Deaths because it highlights the severity of the consequences in every eruption. It compares the destructive power of an eruption with the vulnerability of affected human communities. This approach highlights not only the magnitude of each eruption but also the severe consequences they had on the lives of people in the affected areas.
+
+```{r echo=FALSE}
+top_5_volcano <- head(data_sorted, 5) %>%
+  select(Year, Volcano, Location, VEI, Deaths)
+
+top_5_volcano
+```
+```{r, echo=FALSE}
+ggplot(top_5_volcano, aes(x = reorder(Volcano, Deaths), y = Deaths, fill = factor(VEI))) +
+  geom_col(width = 0.7) +
+  labs(
+    title = "Top 5 Philippine Volcanic Eruptions by Death Toll and VEI",
+    x = "Volcano",
+    y = "Number of Deaths",
+    fill = "VEI"
+  ) +
+  scale_fill_brewer(palette = "Reds", direction = 1) + 
+  theme_classic(base_size = 14)
+```
+
+- **Pinatubo (1991)**
+  - The VEI 6 Plinian eruption—the century's largest—blanketed Zambales/Pampanga in ash, triggered lahars, and cooled Earth by 0.5°C, causing 800+ deaths.
+
+- **Mayon (1814)**
+  - A VEI 4 Plinian/Vulcanian eruption devastated Albay Province (Cagsawa, Daraga) with pyroclastic flows and lahars, killing 1,200+ people.
+
+- **Taal (1911)**
+  - This VEI 4 phreatomagmatic event generated lethal base surges and ashfall across Batangas' Volcano Island and lakeside towns, claiming 1,335 lives.
+
+- **Hibok-Hibok (1951)**
+  - A VEI 3 phreatic-pyroclastic eruption on Camiguin Island (Mambajao) released toxic gases and ash flows, killing 500 despite its smaller scale.
+
+- **Taal (1965)**
+  - Phreatomagmatic explosions (VEI 4) spawned Taal Lake tsunamis and base surges along Batangas shores, resulting in 355 fatalities.
+
+
+## VEI vs Deaths
+```{r, echo=FALSE}
+library(ggcorrplot)
+
+cor_matrix <- top_5_volcano %>%
+  select(VEI, Deaths) %>%
+  cor()
+
+ggcorrplot(cor_matrix,
+           lab =TRUE,
+           show.legend = TRUE,
+           colors = c("gray95", "#D46A6A", "darkred"),
+           title = "VEI vs Deaths Correlation")
+```
+A correlation of 0.19 between VEI (Volcanic Explosivity Index) and Deaths suggests a weak positive relationship. 
+
+- Higher VEI eruptions tend to result in slightly more deaths, but the effect is not strong or consistent.
+- Other factors likely play a larger role in fatalities, such as:
+
+- Proximity to population centers
+
+- Type of eruption (e.g., pyroclastic flow vs lava flow)
+  
+- Preparedness and early warning systems
+  
+- Time of day/year the eruption occurred
+  
+# Conclusion
+
+Our analysis of the top 5 deadliest Philippine volcanic eruptions reveals three key insights:
+
+1. **VEI Alone Doesn't Predict Mortality**  
+   The weak correlation (r = 0.19) confirms that explosiveness (VEI) explains only 3.6% of death toll variation (*R² = 0.036*). Hibok-Hibok's VEI 3 eruption proved deadlier than some VEI 4 events due to toxic gas exposure.
+
+2. **Critical Risk Factors Emerged**  
+   - Proximity to population centers (Taal 1911 affected 500k within 15km)  
+   - Secondary hazards (lahar caused 60% of Pinatubo's deaths)  
+   - Eruption timing (Mayon 1814 occurred at night)  
+   
+3. **Investing in Better Emergency Response and Public Awareness is a must**
+  - Being able to respond more effectively during volcanic eruptions ensures that casualties can be as low as possible, if not zero. A volcanic eruption can have low or high VEI and yet a proper response by authorities will ensure that civilians can be evacuated and given immediate aid in the event of an eruption.    
+   
