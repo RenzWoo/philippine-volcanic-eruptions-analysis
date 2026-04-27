@@ -4,7 +4,7 @@
 
 **Author:** RenzWoo &nbsp;|&nbsp; **Date:** April 2025
 
-![Infographic](Philippine volcanic eruptions.png)
+![Infographic](Philippine_volcanic_eruptions.png)
 
 ---
 
