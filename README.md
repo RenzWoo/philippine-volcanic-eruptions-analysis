@@ -65,20 +65,3 @@ install.packages(c("tidyverse", "readr", "dplyr"))
 
 Output will be saved to `outputs/report.pdf`.
 
----
-
-## Folder Structure
-
-```
-philippine-volcanic-eruptions-analysis/
-├── README.md
-├── data/
-│   └── Volcano-Philippines.csv
-├── notebooks/
-│   └── analysis.Rmd
-├── outputs/
-│   ├── report.pdf
-│   └── plot_deaths_vei.png
-└── assets/
-    └── infographic.png
-```
